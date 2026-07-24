@@ -23,6 +23,17 @@ A full-stack employee management system with a Spring Boot REST API backend and 
 
 Staff Ledger is a CRUD application for managing employee records — names, contact info, department, job title, hire date, employment status, and salary. It's built as a learning/portfolio project to demonstrate a complete, working full-stack flow: a REST API on the backend, and a responsive, dependency-free frontend that consumes it directly.
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="Screenshots/Dashboard-light.png.png" width="49%" alt="Dashboard — light mode" />
+  <img src="Screenshots/Dashboard%20-dark.png.png" width="49%" alt="Dashboard — dark mode" />
+</p>
+<p align="center">
+  <img src="Screenshots/Employee-roster.png.png" width="49%" alt="Employee roster with search and filters" />
+  <img src="Screenshots/Edit-employee.png.png" width="49%" alt="Editing an employee record" />
+</p>
+
 ## ✨ Features
 
 **⚙️ Backend (Spring Boot + PostgreSQL)**
