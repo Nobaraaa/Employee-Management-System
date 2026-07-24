@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Ledger — Employee Management </title>
+<link rel="icon" type="image/jpeg" href="favicon.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="title-block">
+      <div class="eyebrow">Internal Registry</div>
+      <h1>Employee Management</h1>
+    </div>
+    <div class="header-right">
+      <button type="button" id="themeToggle" class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="3.5"/><path d="M10 2v2M10 16v2M18 10h-2M4 10H2M15.5 4.5l-1.4 1.4M5.9 14.1l-1.4 1.4M15.5 15.5l-1.4-1.4M5.9 5.9L4.5 4.5"/></svg>
+        <svg class="icon-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 11.5A7 7 0 018.5 3 7 7 0 1017 11.5z"/></svg>
+      </button>
+      <div class="count-block">
+        <div class="n" id="empCount">0</div>
+        <div class="label">Employees</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="status-line">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">Connecting to API…</span>
+  </div>
+
+  <section class="card">
+    <h2 id="formTitle">Add an employee</h2>
+    <form id="empForm" novalidate>
+      <div class="field">
+        <label for="name">Full name</label>
+        <input type="text" id="name" placeholder="Jordan Ade">
+        <span class="field-error" id="nameError"></span>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="jordan@company.com">
+        <span class="field-error" id="emailError"></span>
+      </div>
+      <div class="field">
+        <label for="department">Department</label>
+        <input type="text" id="department" placeholder="Enter department">
+        <span class="field-error" id="departmentError"></span>
+      </div>
+      <div class="field">
+        <label for="jobTitle">Job title</label>
+        <input type="text" id="jobTitle" placeholder="Enter job title">
+        <span class="field-error" id="jobTitleError"></span>
+      </div>
+      <div class="field">
+        <label for="hireDate">Hire date</label>
+        <input type="date" id="hireDate">
+        <span class="field-error" id="hireDateError"></span>
+      </div>
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status">
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+        <span class="field-error" id="statusError"></span>
+      </div>
+      <div class="field">
+        <label for="salary">Salary</label>
+        <input type="number" id="salary" placeholder="Enter salary" step="0.01">
+        <span class="field-error" id="salaryError"></span>
+      </div>
+      <div class="form-actions">
+        <button type="submit" id="submitBtn"><span class="btn-label">Add employee</span></button>
+        <button type="button" class="secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <div class="ledger-head">
+      <h2>Roster</h2>
+      <div class="filter-bar">
+        <input type="text" id="search" placeholder="Search by name, email or dept...">
+        <select id="statusFilter">
+          <option value="">All status</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+        <select id="departmentFilter">
+          <option value="">All departments</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th class="num">No.</th>
+          <th class="sortable" data-sort="name">Name<span class="sort-arrow"></span></th>
+          <th>Email</th>
+          <th class="sortable" data-sort="department">Department<span class="sort-arrow"></span></th>
+          <th class="sortable" data-sort="jobTitle">Job title<span class="sort-arrow"></span></th>
+          <th class="sortable" data-sort="hireDate">Hire date<span class="sort-arrow"></span></th>
+          <th>Status</th>
+          <th class="num sortable" data-sort="salary">Salary<span class="sort-arrow"></span></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    </div>
+    <div class="loading-state" id="loadingState" style="display:none;">
+      <span class="spinner"></span> Loading employees…
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none;">No employees on record yet.</div>
+    <div class="pagination" id="pagination" style="display:none;">
+      <button type="button" class="page-btn" id="prevPageBtn">&larr; Prev</button>
+      <span class="page-info" id="pageInfo"></span>
+      <button type="button" class="page-btn" id="nextPageBtn">Next &rarr;</button>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<div class="modal-overlay" id="confirmOverlay" style="display:none;">
+  <div class="modal-box">
+    <p id="confirmMessage">Are you sure?</p>
+    <div class="modal-actions">
+      <button type="button" class="secondary" id="confirmCancelBtn">Cancel</button>
+      <button type="button" class="danger-btn" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
